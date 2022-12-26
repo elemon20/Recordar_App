@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recordar App</string>
+    <string name="btnRecu">Recuperar Contraseña</string>
+    <string name="btnsignin">Entrar</string>
+    <string name="btnsignin1">Registrarser</string>
+</resources>
