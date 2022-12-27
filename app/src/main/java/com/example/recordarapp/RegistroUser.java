@@ -139,7 +139,10 @@ public class RegistroUser extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 newRegisterDB();
+                Intent intent = new Intent(getApplicationContext(), LoginUser.class);
+                startActivity(intent);
             }
+
         });
     }
 

@@ -2,6 +2,8 @@ package com.example.recordarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,9 +26,12 @@ public class CrearEvento extends AppCompatActivity {
     private String[] importancia;
 
     String strRut = "";
+    String strUsuario = "";
 
     private ArrayAdapter<String> miAdaptador;
-    private ArrayList<Evento> losEventos;
+    private ArrayList<String> losEventos;
+    private ArrayAdapter<String> miEvento;
+
 
 
     @Override
@@ -33,16 +39,19 @@ public class CrearEvento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_evento);
 
-        poblar();
+        poblarImportancia();
         ref1();
         eventos();
 
 
         Intent intent = getIntent();
         strRut = intent.getStringExtra("rut");
+        strUsuario = intent.getStringExtra("usuario");
+
+
     }
 
-    private void poblar() {
+    private void poblarImportancia() {
         importancia = new String[4];
         importancia[0] = "Seleccione tipo";
         importancia[1] = "Alta";
@@ -95,6 +104,7 @@ public class CrearEvento extends AppCompatActivity {
     }
 
     private void grabarEvento(){
+        losEventos = new ArrayList<String>();
         Evento e = new Evento();
         e.setTitulo(etNombreev.getText().toString());
         e.setFecha(etFechaev.getText().toString());
@@ -102,10 +112,35 @@ public class CrearEvento extends AppCompatActivity {
         e.setObservacion(etObservacion.getText().toString());
         e.setLugar(etLugarev.getText().toString());
 
-        losEventos.add(e);
+        losEventos.add("Titulo: "+ e.getTitulo() + "\n Fecha: " + e.getFecha() + "\n Importancia: " + e.getImportancia() + "\n Observación: " + e.getObservacion() + "\n Lugar: " + e.getLugar());
+
+        mostrarEvento();
 
         Toast.makeText(this, "Grabado exitosamente", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void mostrarEvento(){
+        ListView lista = new ListView(this);
+        miEvento = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, losEventos);
+        lista.setAdapter(miEvento);
+
+        AlertDialog.Builder evento = new AlertDialog.Builder(this);
+        evento.setTitle("Evento Creado.");
+        evento.setView(lista);
+        evento.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), PerfilUser.class);
+                intent.putExtra("rut", strRut);
+                intent.putExtra("usuario", strUsuario);
+                startActivity(intent);
+
+            }
+        });
+
+        AlertDialog dialog = evento.create();
+        dialog.show();
     }
 
     private void ref1() {
@@ -118,6 +153,7 @@ public class CrearEvento extends AppCompatActivity {
 
         miAdaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, importancia);
         spnImportancia.setAdapter(miAdaptador);
+
     }
 
 
@@ -130,8 +166,8 @@ public class CrearEvento extends AppCompatActivity {
             public void onClick(View view) {
                 insertDataev();
                 grabarEvento();
-                Intent intent = new Intent(getApplicationContext(), PerfilUser.class);
-                startActivity(intent);
+
+
             }
         });
     }

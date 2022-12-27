@@ -21,8 +21,7 @@ public class Recuperacion extends AppCompatActivity {
 
     String strRut = "";
     String strUsuario = "";
-    //private Boolean checkRut = null;
-    //private DBHelper db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +39,8 @@ public class Recuperacion extends AppCompatActivity {
 
     private void actualizaPass(){
         String rut = etRut.getText().toString();
-        //       String user = u_reset.getText().toString();
-        Boolean checkRut = checkRut(rut);
+        String resp = etResp.getText().toString();
+        Boolean checkRut = checkRut(rut,resp);
         if (checkRut == true) {
             Toast.makeText(Recuperacion.this, "Usuario correcto", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), Cambiapass.class);
@@ -59,15 +58,16 @@ public class Recuperacion extends AppCompatActivity {
         }
     }
 
-    private Boolean checkRut(String idRut){
+    private Boolean checkRut(String idRut, String resp){
 
         DBHelper DB = new DBHelper(this, "Login", null, 1);
 
         try(SQLiteDatabase MyBD = DB.getWritableDatabase()){
             if(MyBD != null){
                 String strRut = idRut;
-                Cursor c = MyBD.rawQuery("Select rut from users where rut == ?", new String[]
-                        {idRut});
+                String strResp = resp;
+                Cursor c = MyBD.rawQuery("Select rut from users where rut == ? and respuesta == ?",
+                        new String[] {idRut, resp});
 
                 if (c.getCount() > 0)
                     return true;
@@ -84,8 +84,7 @@ public class Recuperacion extends AppCompatActivity {
         reset_btn = findViewById(R.id.btnrecu);
         etResp = findViewById(R.id.etResp);
         etRut = findViewById(R.id.etRut);
-//      u_reset = findViewById(R.id.et_userrecu);
-//      db = new DBHelper(this);
+
     }
 
     private void eventos() {

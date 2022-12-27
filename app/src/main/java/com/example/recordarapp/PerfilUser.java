@@ -2,6 +2,8 @@ package com.example.recordarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,8 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.widget.Toast;
+
 
 import java.text.CollationElementIterator;
 
@@ -49,11 +51,15 @@ public class PerfilUser extends AppCompatActivity {
 
     private void confirmarEliminacion(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("¿Estás seguro de que quieres eliminar los datos de este rut?");
+        alert.setMessage("¿Estás seguro de que quieres eliminar tus datos?");
         alert.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.d("Eliminación de datos", "Eliminando datos...");
                 eliminarDatos();
+                Intent intent = new Intent(getApplicationContext(), LoginUser.class);
+                startActivity(intent);
             }
         });
         alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -62,8 +68,10 @@ public class PerfilUser extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        AlertDialog dialog = alert.show();
+        AlertDialog dialog = alert.create();
+        dialog.show();
     }
+
 
     private void eliminarDatos(){
         DBHelper DB = new DBHelper(this, "Login", null, 1);
@@ -105,6 +113,7 @@ public class PerfilUser extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CrearEvento.class);
                 intent.putExtra("rut", strRut);
+                intent.putExtra("usuario", strUsuario);
                 startActivity(intent);
             }
         });
@@ -113,6 +122,7 @@ public class PerfilUser extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 confirmarEliminacion();
+
             }
         });
 

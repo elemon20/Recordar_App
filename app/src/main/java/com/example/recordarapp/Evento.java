@@ -6,8 +6,8 @@ import java.util.Date;
 public class Evento implements Serializable {
     private String titulo;
     private String fecha;
-    private String observacion;
     private String importancia;
+    private String observacion;
     private String lugar;
 
     //region Constructores
